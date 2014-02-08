@@ -49,7 +49,6 @@ public class Gic2FnCH {
         
         ArrayList<Elemento> list = new ArrayList<Elemento>();
         ArrayList<String> definidos = new ArrayList<String>();
-        //Tabla tabla = new Tabla();
         HashMap<String, Elemento> tabla = new HashMap<String, Elemento>();
         
         for(String s : Tools.getCases(gic).split("\\|")) {
@@ -62,10 +61,8 @@ public class Gic2FnCH {
                 parteB = s.substring(s.length()/2, s.length());
                 
                 if(Tools.isTerminal(parteA)) {
-                    
                     chomsky.append(parteA);
                     elementos.add(parteA);
-                    
                 } else {
                     
                     String _s = "{" + parteA + "}";
@@ -187,7 +184,7 @@ public class Gic2FnCH {
     
     private static boolean isListFull(ArrayList<Elemento> lista) {
         for(byte i = 0; i < lista.size(); i++) {
-            if(lista.get(i).isDefined() == false) {
+            if(!lista.get(i).isDefined()) {
                 return false;
             }
         }
@@ -196,7 +193,7 @@ public class Gic2FnCH {
     
     private static int getIndex(ArrayList<Elemento> lista) {
         for(byte i = 0; i < lista.size(); i++) {
-            if(lista.get(i).isDefined() == false) {
+            if(!lista.get(i).isDefined()) {
                 return i;
             }
         }

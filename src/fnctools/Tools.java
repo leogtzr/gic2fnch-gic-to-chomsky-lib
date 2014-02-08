@@ -21,10 +21,8 @@ public class Tools {
     }
     
     public static String getCases(String s) {
-        
         Pattern pattern = Pattern.compile("->(.*)");
         Matcher matcher = pattern.matcher(s);
-        
         return matcher.find() ? matcher.group(1) : null;
     }
     
@@ -39,11 +37,7 @@ public class Tools {
     public static String getStringBtwn(String s) {
         Pattern pattern = Pattern.compile("\\{(.*)\\}");
         Matcher matcher = pattern.matcher(s);
-        
-        if(matcher.find())
-            return matcher.group(1);
-        else
-            return null;
+        return matcher.find() ? matcher.group(1) : null;
     }
     
     public static boolean isTerminalLower(String s) {
