@@ -5,8 +5,6 @@ package fnctools;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-
-// Regex:
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -190,10 +188,8 @@ public class Gic2FnCH {
     public ArrayList<String> getResultProductions() {
         ArrayList<String> temp = new ArrayList<String>();
         for (String s : this.chomskyList) {
-                String regex = "(\\{\\w+\\})";
                 Pattern p = Pattern.compile(regex);
                 Matcher m = p.matcher(s);
-                
                 while(m.find()) {
                     String symbol = m.group(1);
                     if(!map.containsKey(symbol)) {
@@ -265,14 +261,4 @@ public class Gic2FnCH {
         return Tools.getNameProduction(_gic) + " -> " + fnc;
     }
     
-}
-class Only {
-    private static final Only INSTANCE;
-    static {
-        INSTANCE = new Only();
-    }
-    private Only() {}
-    public static final Only getInstace() {
-        return INSTANCE;
-    }
 }
