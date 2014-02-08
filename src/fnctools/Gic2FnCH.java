@@ -1,19 +1,13 @@
-/* @author Leonardo Gutiérrez Ramírez <leogutierrezramirez.gmail.com> */
-/* Dec 17, 2011 */
+/** @author Leonardo Gutiérrez Ramírez <leogutierrezramirez.gmail.com> */
 
 package fnctools;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
-/**
- * Algoritmo que teniendo una cadena en la forma
- * S->a|aaB|Bab, devuelve la forma normal de Chomsky correspondiente.
- * @author Leonardo Gutiérrez Ramírez | leogutierrezramirez@gmail.com <a href="mailto:leogutierrezramirez@gmail.com">Leonardo Gutiérrez Ramírez</a>
- * @version 1.0
- */
 public class Gic2FnCH {
     
     private LinkedHashMap<String, Integer> map = new LinkedHashMap<String, Integer>();
@@ -32,12 +26,9 @@ public class Gic2FnCH {
         return map;
     }
     
-    /**
-     * Constructor predeterminado.
-     */
     public Gic2FnCH() {
-        chomsky = new StringBuilder("");
-        finalS = new StringBuilder("");
+        chomsky = new StringBuilder();
+        finalS = new StringBuilder();
         parteA = "";
         parteB = "";
         chomskyList = new ArrayList<String>();
@@ -47,15 +38,6 @@ public class Gic2FnCH {
         count = 0;
     }
     
-    /**
-     * El siguiente método genera la forma normal de Chomsky basado en un String.
-     * Para ver el resultado ejecute el método getChomskyForm().
-     * 
-     * {.*} - Simbolo NO Terminal no definido, es decir, que no tiene FNCH
-     * [a-z] - Terminal
-     * 
-     * @param gic - GIC string.
-     */
     public void generate(String gic) {
         
         gic = gic.trim();
@@ -67,7 +49,8 @@ public class Gic2FnCH {
         
         ArrayList<Elemento> list = new ArrayList<Elemento>();
         ArrayList<String> definidos = new ArrayList<String>();
-        Tabla tabla = new Tabla();
+        //Tabla tabla = new Tabla();
+        HashMap<String, Elemento> tabla = new HashMap<String, Elemento>();
         
         for(String s : Tools.getCases(gic).split("\\|")) {
             
@@ -89,7 +72,7 @@ public class Gic2FnCH {
                     
                     chomsky.append(_s);
                     elementos.add(_s);
-                    if(!tabla.getTabla().containsKey(_s)) {
+                    if(!tabla.containsKey(_s)) {
                         tabla.put(_s, new Elemento(_s, false));
                         list.add(new Elemento(_s, false));
                     }
@@ -106,7 +89,7 @@ public class Gic2FnCH {
                     chomsky.append(_s);
                     elementos.add(_s);
                     
-                    if(!tabla.getTabla().containsKey(_s)) {
+                    if(!tabla.containsKey(_s)) {
                         tabla.put(_s, new Elemento(_s, false));
                         list.add(new Elemento(_s, false));
                     }
@@ -121,7 +104,7 @@ public class Gic2FnCH {
         setChomsky(Tools.getNameProduction(gic) + " --> " + chomsky);
         
         int i = 0;
-        while(isListFull(list) == false) {
+        while(!isListFull(list)) {
             
                 finalS.delete(0, finalS.length());
                 parteA = "";
@@ -143,7 +126,7 @@ public class Gic2FnCH {
                         
                         finalS.append("{").append(parteA).append("}");
                         
-                        if(!tabla.getTabla().containsKey("{" + parteA + "}")) {
+                        if(!tabla.containsKey("{" + parteA + "}")) {
                         
                             tabla.put("{" + parteA + "}", new Elemento("{" + parteA + "}", false));
                             list.add(new Elemento("{" + parteA + "}", false));
@@ -157,7 +140,7 @@ public class Gic2FnCH {
                         
                         finalS.append("{").append(parteB).append("}");
                         
-                        if(!tabla.getTabla().containsKey("{" + parteB + "}")) {
+                        if(!tabla.containsKey("{" + parteB + "}")) {
                             
                             tabla.put("{" + parteB + "}", new Elemento("{" + parteB + "}", false));
                             list.add(new Elemento("{" + parteB + "}", false));
@@ -181,10 +164,6 @@ public class Gic2FnCH {
         this.chomskyList = definidos;
     }
     
-    /**
-     * Devuelve las definiciones basándose en la forma normal de chomsky generada
-     * @return ArrayList<String>
-     */
     public ArrayList<String> getResultProductions() {
         ArrayList<String> temp = new ArrayList<String>();
         for (String s : this.chomskyList) {
@@ -202,10 +181,6 @@ public class Gic2FnCH {
         return temp;
     }
     
-    /**
-     * Devuelve la forma normal de chomsky después de haberla generado con el método generate().
-     * @return String
-     */
     public String getChomskyForm() {
         return chomsky.toString();
     }
