@@ -1,0 +1,2 @@
+S->a|aaB|Bab|abBc
+B->baabS|bba
