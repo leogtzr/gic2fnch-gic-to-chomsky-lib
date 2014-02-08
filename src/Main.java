@@ -9,9 +9,6 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.io.IOException;
 
-/**
- * @author Leonardo Gutiérrez Ramírez <leogutierrezramirez.gmail.com>
- */
 public class Main {
 
     public static void main(String ... args) {
