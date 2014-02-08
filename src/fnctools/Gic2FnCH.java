@@ -216,7 +216,7 @@ public class Gic2FnCH {
     
     private static boolean isListFull(ArrayList<Elemento> lista) {
         for(byte i = 0; i < lista.size(); i++) {
-            if(lista.get(i).getDefined() == false) {
+            if(lista.get(i).isDefined() == false) {
                 return false;
             }
         }
@@ -225,7 +225,7 @@ public class Gic2FnCH {
     
     private static int getIndex(ArrayList<Elemento> lista) {
         for(byte i = 0; i < lista.size(); i++) {
-            if(lista.get(i).getDefined() == false) {
+            if(lista.get(i).isDefined() == false) {
                 return i;
             }
         }
@@ -265,4 +265,14 @@ public class Gic2FnCH {
         return Tools.getNameProduction(_gic) + " -> " + fnc;
     }
     
+}
+class Only {
+    private static final Only INSTANCE;
+    static {
+        INSTANCE = new Only();
+    }
+    private Only() {}
+    public static final Only getInstace() {
+        return INSTANCE;
+    }
 }

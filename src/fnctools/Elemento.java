@@ -21,7 +21,7 @@ public class Elemento {
         return chomskyStr;
     }
     
-    public boolean getDefined() {
+    public boolean isDefined() {
         return definido;
     }
     
