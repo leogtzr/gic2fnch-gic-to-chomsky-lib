@@ -10,14 +10,11 @@ import java.util.ArrayList;
 import java.io.IOException;
 
 /**
- * Aplicación de prueba del algoritmo.
- *
  * @author Leonardo Gutiérrez Ramírez <leogutierrezramirez.gmail.com>
- *
  */
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String ... args) {
 
         ArrayList<String> linesFromFile = new ArrayList<String>();
 
@@ -45,7 +42,6 @@ public class Main {
             for (String s : gic2fnch.getResultProductions()) {
                 System.out.println(s);
             }
-            System.out.println("-------------------------------------------------");
         }
     }
 }
