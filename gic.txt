@@ -1,1 +1,2 @@
 S->ab|aaB
+G->xb|aaB

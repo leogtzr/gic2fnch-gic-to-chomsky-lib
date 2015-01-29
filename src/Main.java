@@ -1,9 +1,9 @@
-/*  Aplicación que transforma una gramática independiente del contexto en
+/**  Aplicación que transforma una gramática independiente del contexto en
  *  Forma normal de Chomsky
  *  @author Leonardo Gutiérrez Ramírez <leogutierrezramirez.gmail.com>
  */
 
-import fnctools.Gic2FnCH;
+import fnctools.Chomsky;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -28,17 +28,16 @@ public class Main {
             System.err.println("Error: " + ex.getMessage());
         }
 
-        Gic2FnCH gic2fnch = new Gic2FnCH();
-
-        for (byte i = 0; i < linesFromFile.size(); i++) {
-            System.out.println("GIC [ " + linesFromFile.get(i) + " ]");
-            gic2fnch.generate(linesFromFile.get(i));
-            System.out.println("FNCH: " + gic2fnch.getFNCH());
-            
-            System.out.println("Producciones: ");
-            for (String s : gic2fnch.getResultProductions()) {
-                System.out.println(s);
-            }
+        Chomsky gic2fnch = new Chomsky(linesFromFile, "X");
+        gic2fnch.generateChomsky();
+        
+        for(String nf : gic2fnch.getNormalForms()) {
+            System.out.println(nf);
         }
+        
+        for(String production : gic2fnch.getProductions()) {
+            System.out.println(production);
+        }
+        
     }
 }

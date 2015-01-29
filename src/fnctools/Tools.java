@@ -14,7 +14,7 @@ public class Tools {
         return (byte)new StringTokenizer(s, "|").countTokens();
     }
     
-    public static String getNameProduction(String s) {
+    public static String getProductionName(String s) {
         Pattern pattern = Pattern.compile("(.*)->");
         Matcher matcher = pattern.matcher(s);
         return matcher.find() ? matcher.group(1) : null;
@@ -40,7 +40,7 @@ public class Tools {
         return matcher.find() ? matcher.group(1) : null;
     }
     
-    public static boolean isTerminalLower(String s) {
+    public static boolean isLowerTerminal(String s) {
         return Pattern.matches("^[a-z]$", s);
     }
     
