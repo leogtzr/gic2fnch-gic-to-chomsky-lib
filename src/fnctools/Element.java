@@ -8,7 +8,7 @@ public class Element {
     private final String chomskyStr;
     private boolean defined;
 
-    public Element(String chomString, boolean defined) {
+    public Element(final String chomString, final boolean defined) {
         this.chomskyStr = chomString;
         this. defined =  defined;
     }
@@ -21,7 +21,7 @@ public class Element {
         return defined;
     }
     
-    public void setDefined(boolean defined) {
+    public void setDefined(final boolean defined) {
         this.defined = defined;
     }
 

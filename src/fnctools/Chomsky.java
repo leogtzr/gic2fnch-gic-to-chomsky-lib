@@ -12,22 +12,19 @@ import java.util.regex.Matcher;
 
 public class Chomsky {
     
-    private LinkedHashMap<String, Integer> map = new LinkedHashMap<String, Integer>();
-    private final String regex = "(\\{\\w+\\})";
+    private final LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+    private static final String REGEX = "(\\{\\w+\\})";
     private int count = 0;
 
-    private StringBuilder chomsky = new StringBuilder();
-    private String partA = "";
-    private String partB = "";
-    private StringBuilder finalS = new StringBuilder();
-    private ArrayList<String> chomskyList = new ArrayList<String>();
-    private ArrayList<String> elements = new ArrayList<String>();
+    private final StringBuilder finalS = new StringBuilder();
+    private ArrayList<String> chomskyList = new ArrayList<>();
+    private final ArrayList<String> elements = new ArrayList<>();
     private String _gic;
     
     private final List<String> gicList;
     private final String nonTerminalLetter;
     
-    private final LinkedHashSet<String> normalForms = new LinkedHashSet<String>();
+    private final LinkedHashSet<String> normalForms = new LinkedHashSet<>();
     
     public Chomsky(List<String> gicList, String nonTerminalLetter) {
         if(gicList == null || gicList.isEmpty()) {
@@ -42,15 +39,17 @@ public class Chomsky {
         this.nonTerminalLetter = nonTerminalLetter;
     }
 
-    private void generate(String gic) {
+    private void generate(final String gic) {
         
-        _gic = gic.trim();        
+        _gic = gic.trim();  
         elements.clear();
-        chomsky.delete(0, chomsky.length());
+        StringBuilder chomsky = new StringBuilder();
+        String partA;
+        String partB;
         
-        ArrayList<Element> list = new ArrayList<Element>();
-        ArrayList<String> definidos = new ArrayList<String>();
-        HashMap<String, Element> tabla = new HashMap<String, Element>();
+        ArrayList<Element> list = new ArrayList<>();
+        ArrayList<String> definidos = new ArrayList<>();
+        HashMap<String, Element> tabla = new HashMap<>();
         
         for(String s : Tools.getCases(gic).split("\\|")) {
             
@@ -95,18 +94,14 @@ public class Chomsky {
             }
         }
         
-        String temp = chomsky.substring(0, chomsky.length() - 1);
+        final String temp = chomsky.substring(0, chomsky.length() - 1);
         chomsky.delete(0, chomsky.length());
-        chomsky.append(temp.toString());
-        
-        setChomsky(Tools.getProductionName(gic) + " --> " + chomsky);
+        chomsky.append(temp);
         
         int i = 0;
         while(!isListFull(list)) {
             
                 finalS.delete(0, finalS.length());
-                partA = "";
-                partB = "";
             
                 if(Tools.isChomsky(Tools.getStringBtwn(list.get(i).getChomskyStr()))) {
                     definidos.add(list.get(i).getChomskyStr() + "->" + Tools.getStringBtwn(list.get(i).getChomskyStr()));
@@ -150,21 +145,17 @@ public class Chomsky {
         setChomskyList(definidos);
     }
     
-    private void setChomsky(String s) {
-        this.chomsky = new StringBuilder(s);
-    }
-    
-    private void setChomskyList(ArrayList<String> definidos) {
+    private void setChomskyList(final ArrayList<String> definidos) {
         this.chomskyList = definidos;
     }
     
     public ArrayList<String> getProductions() {
-        ArrayList<String> temp = new ArrayList<String>();
+        final ArrayList<String> temp = new ArrayList<>();
         for (String s : this.chomskyList) {
-                Pattern p = Pattern.compile(regex);
-                Matcher m = p.matcher(s);
+                final Pattern p = Pattern.compile(REGEX);
+                final Matcher m = p.matcher(s);
                 while(m.find()) {
-                    String symbol = m.group(1);
+                    final String symbol = m.group(1);
                     if(!map.containsKey(symbol)) {
                         map.put(symbol, ++count);
                     } 
@@ -175,11 +166,7 @@ public class Chomsky {
         return temp;
     }
     
-    public String getChomskyForm() {
-        return chomsky.toString();
-    }
-    
-    private static boolean isListFull(ArrayList<Element> lista) {
+    private static boolean isListFull(final ArrayList<Element> lista) {
         for(byte i = 0; i < lista.size(); i++) {
             if(!lista.get(i).isDefined()) {
                 return false;
@@ -188,7 +175,7 @@ public class Chomsky {
         return true;
     }
     
-    private static int getIndex(ArrayList<Element> lista) {
+    private static int getIndex(final ArrayList<Element> lista) {
         for(byte i = 0; i < lista.size(); i++) {
             if(!lista.get(i).isDefined()) {
                 return i;
@@ -202,7 +189,7 @@ public class Chomsky {
     }
     
     public void generateChomsky() {
-        for(String gic : gicList) {
+        for (String gic : gicList) {
             generate(gic);
             normalForms.add(getFNCH());
         }
@@ -211,7 +198,7 @@ public class Chomsky {
     public String getFNCH() {
         String fnc = "";
         int c = 0;
-        for(String s : elements) {
+        for (String s : elements) {
             
             if(s.contains("{")) {
                 if(map.containsKey(s)) {
@@ -235,7 +222,7 @@ public class Chomsky {
             }
         }
         if(fnc.substring(fnc.length() - 1).equals("|")) {
-            String s = Tools.getProductionName(_gic) + " -> " + fnc.substring(0, fnc.length() - 1);
+            final String s = Tools.getProductionName(_gic) + " -> " + fnc.substring(0, fnc.length() - 1);
             return s;
         }
         return Tools.getProductionName(_gic) + " -> " + fnc;

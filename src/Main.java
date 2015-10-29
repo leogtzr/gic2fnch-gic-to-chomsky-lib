@@ -13,22 +13,20 @@ public class Main {
 
     public static void main(String ... args) {
 
-        ArrayList<String> linesFromFile = new ArrayList<String>();
+        ArrayList<String> linesFromFile = new ArrayList<>();
 
         try {
-
-            BufferedReader br = new BufferedReader(new FileReader("gic.txt"));
-            String strLine;
-            while ((strLine = br.readLine()) != null) {
-                linesFromFile.add(strLine);
+            try (final BufferedReader br = new BufferedReader(new FileReader("gic.txt"))) {
+                String strLine;
+                while ((strLine = br.readLine()) != null) {
+                    linesFromFile.add(strLine);
+                }
             }
-            br.close();
-
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             System.err.println("Error: " + ex.getMessage());
         }
 
-        Chomsky gic2fnch = new Chomsky(linesFromFile, "X");
+        final Chomsky gic2fnch = new Chomsky(linesFromFile, "X");
         gic2fnch.generateChomsky();
         
         for(String nf : gic2fnch.getNormalForms()) {
