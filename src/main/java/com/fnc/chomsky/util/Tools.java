@@ -1,9 +1,11 @@
-package fnctools;
+package com.fnc.chomsky.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Tools {
+	
+	private Tools() {}
     
     public static boolean isProduction(final String s) {
         return Pattern.matches(".*->.*", s);

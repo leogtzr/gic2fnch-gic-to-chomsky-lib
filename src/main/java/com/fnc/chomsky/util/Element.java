@@ -1,7 +1,7 @@
-/** @author Leonardo Gutiérrez Ramírez <leogutierrezramirez.gmail.com> */
-/** Dec 16, 2011 */
-
-package fnctools;
+/** 
+ * @author Leonardo Gutiérrez Ramírez <leogutierrezramirez.gmail.com> 
+ */
+package com.fnc.chomsky.util;
 
 public class Element {
     
