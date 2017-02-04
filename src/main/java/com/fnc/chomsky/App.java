@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fnc.chomsky.util.Chomsky;
+import com.fnc.chomsky.util.ChomskyNormalForm;
 
 public class App {
 
@@ -21,17 +22,16 @@ public class App {
         final Chomsky gic2fnch = new Chomsky(linesFromFile, "X");
         gic2fnch.generateChomsky();
         
-        System.out.println("Normal Forms ... ");
-        
         for (final String nf : gic2fnch.getNormalForms()) {
-            System.out.println(nf);
         }
-        
-        System.out.println("Productions ... ");
         
         for (final String production : gic2fnch.getProductions()) {
-            System.out.println(production);
         }
+        
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        
+        final ChomskyNormalForm chomskyNormalForm = new ChomskyNormalForm(linesFromFile, '@');
+        chomskyNormalForm.create();
         
     }
     

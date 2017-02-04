@@ -3,6 +3,11 @@ package com.fnc.chomsky.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * 
+ * @author Leo Gutiérrez
+ *
+ */
 public class Tools {
 	
 	private Tools() {}
