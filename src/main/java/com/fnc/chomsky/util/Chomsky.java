@@ -41,7 +41,6 @@ public class Chomsky {
         
         final List<Element> list = new ArrayList<>();
         final List<String> definidos = new ArrayList<>();
-        final Map<String, Element> tabla = new HashMap<>();
         
         String partA;
         String partB;
@@ -65,7 +64,6 @@ public class Chomsky {
                     
                     chomsky.append(nonTerminal);
                     elements.add(nonTerminal);
-                    tabla.put(nonTerminal, new Element(nonTerminal, false));
                     list.add(new Element(nonTerminal, false));
                 }
                 
@@ -79,16 +77,12 @@ public class Chomsky {
                     chomsky.append(nonTerminal);
                     elements.add(nonTerminal);
                     
-                    tabla.put(nonTerminal, new Element(nonTerminal, false));
                     list.add(new Element(nonTerminal, false));
                 }
             }
         }
         
-        System.out.println(list);
-        System.out.println(chomsky);
-        
-        final String temp = chomsky.substring(0, chomsky.length() - 1);
+        final String temp = chomsky.substring(0, chomsky.length());
         chomsky.delete(0, chomsky.length());
         chomsky.append(temp);
         
@@ -109,26 +103,18 @@ public class Chomsky {
                     partA = textBtwn.substring(0, textBtwn.length() / 2);
                     partB = textBtwn.substring(textBtwn.length() / 2, textBtwn.length());
                     
-                    if(Tools.isTerminal(partA)) {
+                    if (Tools.isTerminal(partA)) {
                         finalS.append(partA);
                     } else {
-                        
                         finalS.append("{").append(partA).append("}");
-                        
-                        if (!tabla.containsKey("{" + partA + "}")) {
-                            tabla.put("{" + partA + "}", new Element("{" + partA + "}", false));
-                            list.add(new Element("{" + partA + "}", false));
-                        }
+                        list.add(new Element("{" + partA + "}", false));
                     }
                 
                     if (Tools.isTerminal(partB)) {
                         finalS.append(partB);
                     } else {
                         finalS.append("{").append(partB).append("}");
-                        if (!tabla.containsKey("{" + partB + "}")) {
-                            tabla.put("{" + partB + "}", new Element("{" + partB + "}", false));
-                            list.add(new Element("{" + partB + "}", false));
-                        }
+                        list.add(new Element("{" + partB + "}", false));
                     }
                     definidos.add(elementToDefine.getChomskyStr() + "->" + finalS);
                 }
