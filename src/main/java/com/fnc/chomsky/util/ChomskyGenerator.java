@@ -3,7 +3,12 @@
 
 package com.fnc.chomsky.util;
 
-import static com.fnc.chomsky.util.Tools.*;
+import static com.fnc.chomsky.util.Tools.getCases;
+import static com.fnc.chomsky.util.Tools.getProductionName;
+import static com.fnc.chomsky.util.Tools.getStringBtwn;
+import static com.fnc.chomsky.util.Tools.isChomsky;
+import static com.fnc.chomsky.util.Tools.isLowerTerminal;
+import static com.fnc.chomsky.util.Tools.isTerminal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,16 +25,8 @@ import java.util.regex.Pattern;
 
 public class ChomskyGenerator {
     
-	private final Map<String, Integer> map = new LinkedHashMap<>();
-    
-    private List<String> chomskyList = new ArrayList<>();
-    private final List<String> elements = new ArrayList<>();
-    private String _gic;
-    
     private final List<String> gicList;
     private final String nonTerminalLetter;
-    
-    private final Set<String> normalForms = new LinkedHashSet<>();
     
     private class CasePart {
 
@@ -48,7 +45,7 @@ public class ChomskyGenerator {
 		
 	}
     
-    private class Chomsky {
+    public class Chomsky {
     	
     	private final Set<String> normalForms;
     	private final List<String> productions;
@@ -58,8 +55,8 @@ public class ChomskyGenerator {
 			this.productions = productions;
 		}
 
-		public Set<String> getNormalForms() {
-			return Collections.<String>unmodifiableSet(normalForms);
+		public List<String> getNormalForms() {
+			return Collections.<String>unmodifiableList(new ArrayList<String>(normalForms));
 		}
 
 		public List<String> getProductions() {
@@ -78,61 +75,17 @@ public class ChomskyGenerator {
         this.nonTerminalLetter = nonTerminalLetter;
     }
     
-    private void generate(final String gic) {
-        
-        _gic = gic.trim();
-        elements.clear();
-        final List<Element> pendingElementsToDefine = new ArrayList<>();
-        
-        generateElementsInformationForGIC(gic, elements, pendingElementsToDefine);
-        
-        int elementToDefineIndex = 0;
-        final List<String> definidos = new ArrayList<>();
-        
-        while (!areElementsDefined(pendingElementsToDefine)) {
-            
-            final Element elementToDefine = pendingElementsToDefine.get(elementToDefineIndex);
-            final String textBtwn = getStringBtwn(elementToDefine.getChomskyStr());
-            elementToDefine.setDefined(true);
-            
-            if (isChomsky(getStringBtwn(elementToDefine.getChomskyStr()))) {
-                definidos.add(elementToDefine.getChomskyStr() + "->" + textBtwn);
-            } else {
-            
-            	final StringBuilder finalS = new StringBuilder();
-            	final CasePart cp = fromString(textBtwn);
-            	
-                if (isTerminal(cp.a)) {
-                    finalS.append(cp.a);
-                } else {
-                    finalS.append("{").append(cp.a).append("}");
-                    pendingElementsToDefine.add(new Element("{" + cp.a + "}", false));
-                }
-            
-                if (isTerminal(cp.b)) {
-                    finalS.append(cp.b);
-                } else {
-                    finalS.append("{").append(cp.b).append("}");
-                    pendingElementsToDefine.add(new Element("{" + cp.b + "}", false));
-                }
-                definidos.add(elementToDefine.getChomskyStr() + "->" + finalS);
-            }
-            elementToDefineIndex = getNextUndefinedElementIndex(pendingElementsToDefine);
-        }
-        setChomskyList(definidos);
-    }
-    
-    private Map<String, List<String>> generateLeo(final String gic) {
+    private Map<String, List<String>> create(final String gic) {
         
     	final Map<String, List<String>> data = new HashMap<String, List<String>>();
     	final List<String> elements = new ArrayList<>();
         final List<Element> pendingElementsToDefine = new ArrayList<>();
         
         generateElementsInformationForGIC(gic, elements, pendingElementsToDefine);
-        data.put("ELEMENTS", elements);
+        data.put(FNCHConstants.ELEMENTS, elements);
         
         int elementToDefineIndex = 0;
-        final List<String> definidos = new ArrayList<>();
+        final List<String> defined = new ArrayList<>();
         
         while (!areElementsDefined(pendingElementsToDefine)) {
             
@@ -141,56 +94,35 @@ public class ChomskyGenerator {
             elementToDefine.setDefined(true);
             
             if (isChomsky(getStringBtwn(elementToDefine.getChomskyStr()))) {
-                definidos.add(elementToDefine.getChomskyStr() + "->" + textBtwn);
+                defined.add(elementToDefine.getChomskyStr() + "->" + textBtwn);
             } else {
             
-            	final StringBuilder finalS = new StringBuilder();
+            	final StringBuilder productionRule = new StringBuilder();
             	final CasePart cp = fromString(textBtwn);
             	
                 if (isTerminal(cp.a)) {
-                    finalS.append(cp.a);
+                    productionRule.append(cp.a);
                 } else {
-                    finalS.append("{").append(cp.a).append("}");
+                    productionRule.append("{").append(cp.a).append("}");
                     pendingElementsToDefine.add(new Element("{" + cp.a + "}", false));
                 }
             
                 if (isTerminal(cp.b)) {
-                    finalS.append(cp.b);
+                    productionRule.append(cp.b);
                 } else {
-                    finalS.append("{").append(cp.b).append("}");
+                    productionRule.append("{").append(cp.b).append("}");
                     pendingElementsToDefine.add(new Element("{" + cp.b + "}", false));
                 }
-                definidos.add(elementToDefine.getChomskyStr() + "->" + finalS);
+                defined.add(elementToDefine.getChomskyStr() + "->" + productionRule);
             }
-            elementToDefineIndex = getNextUndefinedElementIndex(pendingElementsToDefine);
+            elementToDefineIndex = nextUndefinedElementIndex(pendingElementsToDefine);
         }
-        data.put("DEFINED", definidos);
+        data.put(FNCHConstants.DEFINED, defined);
         
         return data;
     }
     
-    private void setChomskyList(final List<String> definidos) {
-        this.chomskyList = definidos;
-    }
-    
-    public List<String> getProductions() {
-        final List<String> productions = new ArrayList<>();
-        for (String s : new LinkedHashSet<>(chomskyList)) {
-                final Pattern p = Pattern.compile(FNCHConstants.REGEX);
-                final Matcher m = p.matcher(s);
-                while (m.find()) {
-                    final String symbol = m.group(1);
-                    if (!map.containsKey(symbol)) {
-                        map.put(symbol, map.size() + 1);
-                    } 
-                    s = s.replace(symbol, nonTerminalLetter + map.get(symbol));
-                }
-                productions.add(s);
-            }
-        return productions;
-    }
-    
-    public List<String> getProductionsLeo(final List<String> chomskyList, final Map<String, Integer> mapCount) {
+    private List<String> getProductions(final List<String> chomskyList, final Map<String, Integer> mapCount) {
         final List<String> productions = new ArrayList<>();
         for (String s : new LinkedHashSet<>(chomskyList)) {
                 final Pattern p = Pattern.compile(FNCHConstants.REGEX);
@@ -216,7 +148,7 @@ public class ChomskyGenerator {
         return true;
     }
     
-    private int getNextUndefinedElementIndex(final List<Element> elements) {
+    private int nextUndefinedElementIndex(final List<Element> elements) {
     	int index = 0;
         for (final Element element : elements) {
             if (!element.isDefined()) {
@@ -227,67 +159,20 @@ public class ChomskyGenerator {
         return index;
     }
     
-    public Set<String> getNormalForms() {
-        return normalForms;
-    }
-    
-    public void generateChomsky() {
-        for (final String gic : gicList) {
-            generate(gic);
-            normalForms.add(getFNCH());
-        }
-    }
-    
-    public List<Chomsky> generateChomskyLeo() {
+    public List<Chomsky> generate() {
     	final List<Chomsky> fnchs = new ArrayList<>();
         for (final String gic : gicList) {
-        	final Map<String, List<String>> data = generateLeo(gic);
+        	final Map<String, List<String>> data = create(gic);
         	final Map<String, Integer> mapCount = new LinkedHashMap<>();
-        	final Set<String> normalForms = new HashSet<>(Arrays.<String>asList(getFNCHLeo(gic, data.get("ELEMENTS"), mapCount)));
-        	final List<String> myProductions = getProductionsLeo(data.get("DEFINED"), mapCount);
-        	final Chomsky chomsky = new Chomsky(normalForms, myProductions);
+        	final Set<String> normalForms = new HashSet<>(Arrays.<String>asList(getFNCH(gic, data.get(FNCHConstants.ELEMENTS), mapCount)));
+        	final List<String> productions = getProductions(data.get(FNCHConstants.DEFINED), mapCount);
+        	final Chomsky chomsky = new Chomsky(normalForms, productions);
         	fnchs.add(chomsky);
         }
         return fnchs;
     }
     
-    private String getFNCH() {
-        
-    	String fnc = "";
-    	int c = 0;
-        
-        for (String element : elements) {
-            if (element.contains("{")) {
-                if (map.containsKey(element)) {
-                	element = nonTerminalLetter + map.get(element);
-                } else {
-                    map.put(element, map.size() + 1);
-                    element = nonTerminalLetter + map.get(element);
-                }
-            }
-            
-            if (isLowerTerminal(element)) {
-                fnc += element + "|";
-                c = 0;
-            } else {
-                fnc += element;
-                c++;
-                if (c == 2) {
-                    fnc += "|";
-                    c = 0;
-                }
-            }
-        }
-        
-        if (fnc.substring(fnc.length() - 1).equals("|")) {
-            final String s = getProductionName(_gic) + " -> " + fnc.substring(0, fnc.length() - 1);
-            return s;
-        }
-        
-        return getProductionName(_gic) + " -> " + fnc;
-    }
-    
-    private String getFNCHLeo(final String gic, final List<String> elements, Map<String, Integer> map) {
+    private String getFNCH(final String gic, final List<String> elements, Map<String, Integer> map) {
         
     	String fnc = "";
     	int c = 0;
@@ -320,7 +205,7 @@ public class ChomskyGenerator {
             return s;
         }
         
-        return getProductionName(_gic) + " -> " + fnc;
+        return getProductionName(gic) + " -> " + fnc;
     }
     
     private CasePart fromString(final String gicCase) {

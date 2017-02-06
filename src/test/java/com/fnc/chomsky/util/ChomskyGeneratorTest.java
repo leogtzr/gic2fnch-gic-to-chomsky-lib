@@ -1,52 +1,54 @@
 package com.fnc.chomsky.util;
 
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 import java.util.Arrays;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
+import java.util.List;
 
 import org.hamcrest.MatcherAssert;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 public class ChomskyGeneratorTest {
 	
 	private static final String GIC = "S->ab|aaB";
-	
-	private static ChomskyGenerator chomsky = null; 
+	private static final List<String> GICS = Arrays.<String>asList(GIC);
+	private static ChomskyGenerator generator;
+	private static List<ChomskyGenerator.Chomsky> chomskys;
+	private static ChomskyGenerator.Chomsky chomsky;
 	
 	@BeforeClass
 	public static void setUp() {
-		chomsky = new ChomskyGenerator(Arrays.<String>asList(GIC), "X");
-		chomsky.generateChomsky();
+		generator = new ChomskyGenerator(GICS, "X");
+		chomskys = generator.generate();
+		chomsky = chomskys.get(0);
 	}
 	
 	@Test
-	public void shouldReturnNonEmptyNormalForms() {
-		assertFalse(chomsky.getNormalForms().isEmpty());
+	public void shouldNotReturnEmptyListOfChomskyResults() {
+		assertNotNull(chomskys);
+		assertFalse(chomskys.isEmpty());
+		assertThat(chomskys.size(), is(1));
 	}
 	
 	@Test
-	public void shouldReturnNormalForm1() {
-		for (final String normalForm : chomsky.getNormalForms()) {
-			assertEquals("S -> X1X2|X1X3", normalForm);
-		}
+	public void shouldNotReturnAnEmptyChomskyObjectFromList() {
+		assertNotNull(chomskys);
+		assertFalse(chomskys.isEmpty());
+		assertThat(chomskys.size(), is(1));
 	}
 	
 	@Test
-	public void shouldReturnNormalForm2() {
-		final ChomskyGenerator chomskyFixture = new ChomskyGenerator(Arrays.<String>asList("S->ab"), ".");
-		chomskyFixture.generateChomsky();
-		for (final String normalForm : chomskyFixture.getNormalForms()) {
-			assertEquals("S -> .1.2", normalForm);
-		}
-	}
-	
-	@Test
-	public void shouldReturnNonEmptyProductions() {
-		assertFalse(chomsky.getProductions().isEmpty());
+	public void shouldReturnTheRightNormalForms() {
+		final List<String> normalForms = chomsky.getNormalForms();
+		
+		assertNotNull(normalForms);
+		assertEquals("S -> X1X2|X1X3", normalForms.get(0));
 	}
 	
 	@Test
