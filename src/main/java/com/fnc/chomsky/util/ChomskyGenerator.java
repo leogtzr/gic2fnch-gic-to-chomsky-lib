@@ -137,7 +137,6 @@ public class ChomskyGenerator {
     }
     
     public Chomsky generate() {
-    	final List<Chomsky> fnchs = new ArrayList<>();
     	final Map<String, List<String>> data = create(gic);
     	final Map<String, Integer> mapCount = new LinkedHashMap<>();
     	final Set<String> normalForms = new HashSet<>(Arrays.<String>asList(getFNCH(gic, data.get(FNCHConstants.ELEMENTS), mapCount)));
