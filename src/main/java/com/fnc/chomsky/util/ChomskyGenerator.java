@@ -12,7 +12,6 @@ import static com.fnc.chomsky.util.Tools.isTerminal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -23,9 +22,12 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.fnc.chomsky.bean.Chomsky;
+import com.fnc.chomsky.bean.Element;
+
 public class ChomskyGenerator {
     
-    private final List<String> gicList;
+    private final String gic;
     private final String nonTerminalLetter;
     
     private class CasePart {
@@ -45,33 +47,8 @@ public class ChomskyGenerator {
 		
 	}
     
-    public class Chomsky {
-    	
-    	private final Set<String> normalForms;
-    	private final List<String> productions;
-		
-    	public Chomsky(final Set<String> normalForms, final List<String> productions) {
-			this.normalForms = normalForms;
-			this.productions = productions;
-		}
-
-		public List<String> getNormalForms() {
-			return Collections.<String>unmodifiableList(new ArrayList<String>(normalForms));
-		}
-
-		public List<String> getProductions() {
-			return Collections.<String>unmodifiableList(productions);
-		}
-
-		@Override
-		public String toString() {
-			return "Chomsky [normalForms=" + normalForms + ", productions=" + productions + "]";
-		}
-    	
-    }
-    
-    public ChomskyGenerator(final List<String> gicList, final String nonTerminalLetter) {
-        this.gicList = gicList;
+    public ChomskyGenerator(final String gic, final String nonTerminalLetter) {
+        this.gic = gic;
         this.nonTerminalLetter = nonTerminalLetter;
     }
     
@@ -159,17 +136,13 @@ public class ChomskyGenerator {
         return index;
     }
     
-    public List<Chomsky> generate() {
+    public Chomsky generate() {
     	final List<Chomsky> fnchs = new ArrayList<>();
-        for (final String gic : gicList) {
-        	final Map<String, List<String>> data = create(gic);
-        	final Map<String, Integer> mapCount = new LinkedHashMap<>();
-        	final Set<String> normalForms = new HashSet<>(Arrays.<String>asList(getFNCH(gic, data.get(FNCHConstants.ELEMENTS), mapCount)));
-        	final List<String> productions = getProductions(data.get(FNCHConstants.DEFINED), mapCount);
-        	final Chomsky chomsky = new Chomsky(normalForms, productions);
-        	fnchs.add(chomsky);
-        }
-        return fnchs;
+    	final Map<String, List<String>> data = create(gic);
+    	final Map<String, Integer> mapCount = new LinkedHashMap<>();
+    	final Set<String> normalForms = new HashSet<>(Arrays.<String>asList(getFNCH(gic, data.get(FNCHConstants.ELEMENTS), mapCount)));
+    	final List<String> productions = getProductions(data.get(FNCHConstants.DEFINED), mapCount);
+    	return new Chomsky(normalForms, productions);
     }
     
     private String getFNCH(final String gic, final List<String> elements, Map<String, Integer> map) {

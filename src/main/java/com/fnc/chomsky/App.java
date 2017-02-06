@@ -4,17 +4,22 @@
  */
 package com.fnc.chomsky;
 
-import java.util.Arrays;
-import java.util.List;
-
+import com.fnc.chomsky.bean.Chomsky;
 import com.fnc.chomsky.util.ChomskyGenerator;
 
 public class App {
 
     public static void main(final String ... args) {
-        final ChomskyGenerator generator = new ChomskyGenerator(Arrays.<String>asList(args), "X");
-        final List<ChomskyGenerator.Chomsky> chomskys = generator.generate();
-        System.out.println(chomskys);
+        final ChomskyGenerator generator = new ChomskyGenerator(args[0], "X");
+        final Chomsky chomsky = generator.generate();
+
+        for (final String nf : chomsky.getNormalForms()) {
+            System.out.println(nf);
+        }
+
+        for (final String production : chomsky.getProductions()) {
+            System.out.println(production);
+        }
     }
     
 }

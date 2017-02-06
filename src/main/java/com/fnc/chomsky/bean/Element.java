@@ -1,7 +1,7 @@
 /** 
  * @author Leonardo Gutiérrez Ramírez <leogutierrezramirez.gmail.com> 
  */
-package com.fnc.chomsky.util;
+package com.fnc.chomsky.bean;
 
 public class Element {
     

@@ -1,28 +1,27 @@
 Leo Gutiérrez R. leogutierrezramirez@gmail.com
 
-Transform a GIC into a Chomsky normal form
+Transform a GIC into a Chomsky normal form.
 
 Input: 
 
 	S->ab|aaB
 
 ```java
-Chomsky gic2fnch = new Chomsky(linesFromFile, "X");
-gic2fnch.generateChomsky();
+ChomskyGenerator generator = new ChomskyGenerator("S->ab|aaB", "X");
+Chomsky chomsky = generator.generate();
 
-for(String nf : gic2fnch.getNormalForms()) {
-System.out.println(nf);
+for (final String nf : chomsky.getNormalForms()) {
+    System.out.println(nf);
 }
 
-for(String production : gic2fnch.getProductions()) {
-System.out.println(production);
+for (final String production : chomsky.getProductions()) {
+    System.out.println(production);
 }
 ```
 
 Output:
 
-	FNCH: S -> X1X2|X1X3
-	Producciones: 
-	X1->a
-	X2->b
-	X3->X1B
+    S -> X1X2|X1X3
+    X1->a
+    X2->b
+    X3->X1B

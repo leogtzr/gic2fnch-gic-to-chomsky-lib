@@ -5,6 +5,8 @@ import static org.hamcrest.CoreMatchers.is;
 
 import org.junit.Test;
 
+import com.fnc.chomsky.bean.Element;
+
 public class ElementTest {
 	
 	@Test
