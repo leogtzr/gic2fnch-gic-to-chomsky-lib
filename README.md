@@ -10,11 +10,11 @@ Input:
 ChomskyGenerator generator = new ChomskyGenerator("S->ab|aaB", "X");
 Chomsky chomsky = generator.generate();
 
-for (final String nf : chomsky.getNormalForms()) {
+for (final String nf : chomsky.normalForms()) {
     System.out.println(nf);
 }
 
-for (final String production : chomsky.getProductions()) {
+for (final String production : chomsky.productions()) {
     System.out.println(production);
 }
 ```
