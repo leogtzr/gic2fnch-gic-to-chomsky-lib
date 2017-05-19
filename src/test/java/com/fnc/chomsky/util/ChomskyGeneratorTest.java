@@ -31,7 +31,7 @@ public class ChomskyGeneratorTest {
 	
 	@Test
 	public void shouldReturnTheRightNormalForms() {
-		final List<String> normalForms = chomsky.getNormalForms();
+		final List<String> normalForms = chomsky.normalForms();
 		
 		assertNotNull(normalForms);
 		assertEquals("S -> X1X2|X1X3", normalForms.get(0));
@@ -40,7 +40,7 @@ public class ChomskyGeneratorTest {
 	@Test
 	public void shouldReturnTheRightProductions() {
 		final String[] productions = {"X1->a", "X2->b", "X3->X1B"};
-		MatcherAssert.assertThat(chomsky.getProductions(), hasItems(productions));
+		MatcherAssert.assertThat(chomsky.productions(), hasItems(productions));
 	}
 	
 }

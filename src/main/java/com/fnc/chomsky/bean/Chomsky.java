@@ -15,11 +15,11 @@ public class Chomsky {
 		this.productions = productions;
 	}
 
-	public List<String> getNormalForms() {
+	public List<String> normalForms() {
 		return Collections.<String>unmodifiableList(new ArrayList<String>(normalForms));
 	}
 
-	public List<String> getProductions() {
+	public List<String> productions() {
 		return Collections.<String>unmodifiableList(productions);
 	}
 
